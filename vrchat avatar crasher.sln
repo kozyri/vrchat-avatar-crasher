@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31729.503
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "vrchat avatar crasher", "vrchat avatar crasher\vrchat avatar crasher.csproj", "{E0CBE676-B557-4689-9B0D-D62DD900BFEA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E0CBE676-B557-4689-9B0D-D62DD900BFEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0CBE676-B557-4689-9B0D-D62DD900BFEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0CBE676-B557-4689-9B0D-D62DD900BFEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0CBE676-B557-4689-9B0D-D62DD900BFEA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {838E6DF2-B1E3-4554-AF5B-9E41F4398135}
+	EndGlobalSection
+EndGlobal
