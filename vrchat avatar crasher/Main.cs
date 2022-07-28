@@ -1,11 +1,10 @@
-﻿//quickly thrown together as a PoC. this works, no avatar ids are included, find your own.
+//quickly thrown together as a PoC. this works, no avatar ids are included, find your own.
 
 using System;
 using System.IO;
 using System.Threading;
 using System.Text;
 using System.Net.Http;
-using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
@@ -16,6 +15,23 @@ namespace VRCAvatarCrasher
     {
         static HttpClient web = new HttpClient(new HttpClientHandler { UseCookies = false });
         static DirectoryInfo directory = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "Low\\VRChat\\VRChat\\Cache-WindowsPlayer");
+
+        static bool CheckForVRChat(bool loop)
+        {
+            while (true)
+            {
+                Process[] name = Process.GetProcessesByName("notepad");
+                if (name.Length != 0)
+                    return true;
+
+                if (!loop)
+                    break;
+
+                Thread.Sleep(2);
+            }
+
+            return false;
+        }
 
         static void LockCache(bool unlock) //confusing param, oh well
         {
@@ -34,16 +50,8 @@ namespace VRCAvatarCrasher
                 return;
             }
 
-            while (true)
-            {
-                Process[] pname = Process.GetProcessesByName("VRChat");
-                if (pname.Length != 0)
-                {
-                    Console.WriteLine("\nVRChat opened! Sleeping for a while then locking directory.");
-                    break;
-                }
-                Thread.Sleep(2);
-            }
+            if (CheckForVRChat(true))
+                Console.WriteLine("\nVRChat opened! Sleeping for a while then locking directory.");
 
             Thread.Sleep(15000); //just so everything can start up, eac is slow. adjust this to your needs
 
@@ -109,10 +117,9 @@ namespace VRCAvatarCrasher
         {
             Console.Title = "EAC fixed it all. VRChat did the right choice. No more Avatar Crashing. Thank you VRC Engineers! svh.natt.pw";
 
-            LockCache(true); //we can unlock it incase something went wrong
+            LockCache(true); //we can unlock the cache incase something went wrong
 
-            Process[] pname = Process.GetProcessesByName("VRChat");
-            if (pname.Length != 0)
+            if (CheckForVRChat(false))
             {
                 Console.WriteLine("Please close VRChat before running this tool.");
                 Close(5000);
@@ -125,16 +132,16 @@ namespace VRCAvatarCrasher
 
             Console.Write("Do you want to hide your user id/avatar input? (y/n): ");
             string hide = Console.ReadLine();
-            bool should_hide = false;
-            if (hide == "y")
-                should_hide = true;
+            bool shouldhide = false;
+            if (hide == "y" || hide == "Y")
+                shouldhide = true;
             else
-                should_hide = false; //who cares if they dont input "n" lol
+                shouldhide = false; //who cares if they dont input "n" lol
 
             Console.Write("Enter Your User ID (You can grab this on VRChat.com): ");
-            string user_id = null;
-            if (!should_hide)
-                user_id = Console.ReadLine();
+            string usr = null;
+            if (!shouldhide)
+                usr = Console.ReadLine();
             else
             {
                 while (true)
@@ -142,36 +149,36 @@ namespace VRCAvatarCrasher
                     ConsoleKeyInfo key = Console.ReadKey(true);
                     if (key.Key == ConsoleKey.Enter)
                         break;
-                    user_id += key.KeyChar;
+                    usr += key.KeyChar;
                 }
-                user_id = Regex.Replace(user_id, @"[^\u0000-\u007F]+", string.Empty);
+                usr = Regex.Replace(usr, @"[^\u0000-\u007F]+", string.Empty);
             }
 
-            if (user_id.Length < 1 || !user_id.StartsWith("usr_"))
+            if (usr.Length < 1 || !usr.StartsWith("usr_"))
             {
-                if (should_hide)
+                if (shouldhide)
                     Console.Write("\n");
                 Console.WriteLine("Please enter a valid user id.");
                 Close(5000);
             }
 
-            if (should_hide)
+            if (shouldhide)
                 Console.Write("\nEnter Your Auth Cookie (You can grab this on VRChat.com): ");
             else
                 Console.Write("Enter Your Auth Cookie [HIDDEN] (You can grab this on VRChat.com): ");
 
             //https://stackoverflow.com/a/36332407 used for censoring authcookie input
-            string auth_cookie = null;
+            string auth = null;
             while (true)
             {
                 ConsoleKeyInfo key = Console.ReadKey(true);
                 if (key.Key == ConsoleKey.Enter)
                     break;
-                auth_cookie += key.KeyChar;
+                auth += key.KeyChar;
             }
-            auth_cookie = Regex.Replace(auth_cookie, @"[^\u0000-\u007F]+", string.Empty);
+            auth = Regex.Replace(auth, @"[^\u0000-\u007F]+", string.Empty);
 
-            if (auth_cookie.Length < 1 || !auth_cookie.StartsWith("authcookie_"))
+            if (auth.Length < 1 || !auth.StartsWith("authcookie_"))
             {
                 Console.WriteLine("\nPlease enter a valid auth cookie.");
                 Close(5000);
@@ -179,7 +186,7 @@ namespace VRCAvatarCrasher
 
             Console.Write("\nEnter Avatar ID to switch into: ");
             string avatar = null;
-            if (!should_hide)
+            if (!shouldhide)
                 avatar = Console.ReadLine();
             else
             {
@@ -195,16 +202,16 @@ namespace VRCAvatarCrasher
 
             if (!avatar.StartsWith("avtr_"))
             {
-                if (should_hide)
+                if (shouldhide)
                     Console.Write("\n");
                 Console.WriteLine("Please enter a valid avatar.");
                 Close(5000);
             }
 
-            if (should_hide)
+            if (shouldhide)
                 Console.Write("\n"); //so it doesnt mess up the output
 
-            SwapAvatar(user_id, auth_cookie, avatar);
+            SwapAvatar(usr, auth, avatar);
         }
     }
 }
