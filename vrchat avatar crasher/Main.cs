@@ -20,7 +20,7 @@ namespace VRCAvatarCrasher
         {
             while (true)
             {
-                Process[] name = Process.GetProcessesByName("notepad");
+                Process[] name = Process.GetProcessesByName("VRChat");
                 if (name.Length != 0)
                     return true;
 
@@ -135,8 +135,6 @@ namespace VRCAvatarCrasher
             bool shouldhide = false;
             if (hide == "y" || hide == "Y")
                 shouldhide = true;
-            else
-                shouldhide = false; //who cares if they dont input "n" lol
 
             Console.Write("Enter Your User ID (You can grab this on VRChat.com): ");
             string usr = null;
